@@ -1,0 +1,50 @@
+# build-version: 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: urnr
+  name: front
+  labels:
+    app: front
+spec:
+  # replicas: 3
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9113'
+      labels:
+        app: front
+    spec:
+      containers:
+        - name: front
+          image: kjk7212/release_note_front
+          ports:
+            - name: front
+              containerPort: 3000
+          resources:
+            limits:
+              cpu: 750m
+              memory: 2048Mi
+        - name: front-exporter
+          image: 'nginx/nginx-prometheus-exporter:0.10.0'
+          args:
+            - '-nginx.scrape-uri=http://localhost:3000/metrics'
+          ports:
+            - name: ngnix-exporter
+              containerPort: 9113
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - front
+              topologyKey: kubernetes.io/hostname
