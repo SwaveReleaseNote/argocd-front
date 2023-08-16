@@ -22,6 +22,7 @@ spec:
       containers:
         - name: front
           image: kjk7212/release_note_front
+          imagePullPolicy: Always
           ports:
             - name: front
               containerPort: 3000
