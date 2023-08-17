@@ -1,4 +1,4 @@
-# build-version: 150
+# build-version: 153
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: front
-          image: kjk7212/release_note_front:150
+          image: kjk7212/release_note_front:153
           imagePullPolicy: Always
           ports:
             - name: front
